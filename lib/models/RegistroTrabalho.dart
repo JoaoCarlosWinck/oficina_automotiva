@@ -1,4 +1,3 @@
-import 'situacao_trabalho.dart';
 import 'trabalho.dart';
 
 class RegistroTrabalho {

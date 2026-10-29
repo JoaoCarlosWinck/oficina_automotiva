@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
 
+// Importações do Exemplo
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart' as p;
+
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
+
+import 'package:sqflite_common_ffi/sqflite_ffi.dart' show sqfliteFfiInit, databaseFactoryFfi;
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart' show databaseFactoryFfiWeb;
+
+
 void main() {
   runApp(const MyApp());
 }

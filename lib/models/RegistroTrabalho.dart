@@ -2,54 +2,60 @@ import 'situacao_trabalho.dart';
 import 'trabalho.dart';
 
 class RegistroTrabalho {
+  final int? id;
   final Trabalho trabalho;          // FK trabalhos_idtrabalhos (imutável)
-  SituacaoTrabalho _situacao;       // única coisa que muda
+  String situacao;       // única coisa que muda
+  int quantidade;
 
   RegistroTrabalho({
+    this.id,
     required this.trabalho,
-    SituacaoTrabalho situacao = SituacaoTrabalho.pendente,
-  }) : _situacao = situacao;
-
-  SituacaoTrabalho get situacao => _situacao;
+    this.situacao = "pendente",
+    required this.quantidade,
+  });
 
   // ---------- Métodos de negócio ----------
   double get valor => trabalho.valor;
 
-  bool get estaConcluido => _situacao == SituacaoTrabalho.concluido;
-
   void iniciar() {
-    if (_situacao != SituacaoTrabalho.pendente) {
+    if (situacao != "pendente") {
       throw StateError('Só é possível iniciar um trabalho pendente.');
     }
-    _situacao = SituacaoTrabalho.emExecucao;
+    situacao = "emAndamento";
   }
 
   void concluir() {
-    if (_situacao != SituacaoTrabalho.emExecucao) {
+    if (situacao != "emAndamento") {
       throw StateError('Só é possível concluir um trabalho em execução.');
     }
-    _situacao = SituacaoTrabalho.concluido;
+    situacao = "concluido";
   }
 
   // ---------- copyWith: trabalho fica protegido ----------
-  RegistroTrabalho copyWith({SituacaoTrabalho? situacao}) => RegistroTrabalho(
-        trabalho: trabalho,
-        situacao: situacao ?? _situacao,
+  RegistroTrabalho copyWith({int? id, Trabalho? trabalho, String? situacao, int? quantidade}) => RegistroTrabalho(
+        id: id ?? this.id,
+        trabalho: trabalho ?? this.trabalho,
+        situacao: situacao ?? this.situacao,
+        quantidade: quantidade ?? this.quantidade,
       );
 
   // ---------- Conversões ----------
   Map<String, dynamic> toMap() => {
+        'id': id,
         'trabalho': trabalho.toMap(),
-        'situacao': _situacao.index, // TINYINT
+        'situacao': situacao, // TINYINT
+        'quantidade': quantidade,
       };
 
   factory RegistroTrabalho.fromMap(Map<String, dynamic> map) =>
       RegistroTrabalho(
+        id: map['id'] as int,
         trabalho: Trabalho.fromMap(map['trabalho'] as Map<String, dynamic>),
-        situacao: SituacaoTrabalho.values[map['situacao'] as int],
+        situacao: map['situacao'] as String,
+        quantidade: map['quantidade'] as int,
       );
 
   @override
   String toString() =>
-      'RegistroTrabalho(${trabalho.tipo}, situacao: ${_situacao.name})';
+      'RegistroTrabalho(${trabalho.tipo}, situacao: $situacao)';
 }
